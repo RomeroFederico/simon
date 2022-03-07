@@ -19,7 +19,7 @@ pulsadores.push(pulsador_green);
 pulsadores.push(pulsador_red);
 
 const actualizarMostrarSecuencia = function(string) {
-	panel.escribir(string);
+	//panel.escribir(string);
 }
 
 const tocarPulsador = async function (pulsador) {

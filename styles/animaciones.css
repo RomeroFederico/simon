@@ -70,3 +70,35 @@
     box-shadow: 0 0 0px #528009;
   }
 }
+
+.shake-izq {
+  animation: shake-i 2s infinite;
+}
+
+.shake-der {
+  animation: shake-d 2s infinite;
+}
+
+@keyframes shake-i {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  5%, 15%, 25%, 35%, 45% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  10%, 20%, 30%, 40%, 100% {
+    transform: translate3d(1px, 0, 0);
+  }
+}
+
+@keyframes shake-d {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  5%, 15%, 25%, 35%, 45% {
+    transform: translate3d(1px, 0, 0);
+  }
+  10%, 20%, 30%, 40%, 100% {
+    transform: translate3d(-1px, 0, 0);
+  }
+}
