@@ -36,7 +36,7 @@ body {
 
 .pulsadorHabilitado:hover {
 	opacity: 1;
-	cursor:  pointer;
+	cursor: pointer;
 }
 
 .pulsador.orange {
@@ -49,6 +49,8 @@ body {
 .pulsadorHabilitado.orange:hover {
 	background-color: #f0cb11;
     box-shadow: 0 0 5px #f0cb11;
+    top: -15px;
+	left: -15px;
 }
 
 .pulsador.blue {
@@ -61,6 +63,8 @@ body {
 .pulsadorHabilitado.blue:hover {
 	background-color: #79bcff;
     box-shadow: 0 0 5px #79bcff;
+    top: -15px;
+	right: -15px;
 }
 
 .pulsador.red {
@@ -73,6 +77,8 @@ body {
 .pulsadorHabilitado.red:hover {
 	background-color: #f24437;
     box-shadow: 0 0 5px #f24437;
+    bottom: -15px;
+	left: -15px;
 }
 
 .pulsador.green {
@@ -85,6 +91,8 @@ body {
 .pulsadorHabilitado.green:hover {
 	background-color: #a4e271;
     box-shadow: 0 0 5px #a4e271;
+    bottom: -15px;
+	right: -15px;
 }
 
 #centro {

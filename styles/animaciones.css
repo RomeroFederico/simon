@@ -2,13 +2,13 @@
   animation-name: glowing-orange
 }
 .animacion-blue {
-  animation: glowing-blue;
+  animation-name: glowing-blue;
 }
 .animacion-red {
-  animation: glowing-red;
+  animation-name: glowing-red;
 }
 .animacion-green {
-  animation: glowing-green;
+  animation-name: glowing-green;
 }
 
 @keyframes glowing-orange {

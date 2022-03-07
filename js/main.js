@@ -10,6 +10,7 @@ const panel = new HTML_Elements.Div("panel");
 
 const pulsadores = [];
 const secuencia = [];
+var secuenciaPulsada = [];
 var tiempo = 1000;
 
 pulsadores.push(pulsador_orange);
@@ -39,6 +40,12 @@ const iluminarPulsador = async function (pulsador) {
 	return true;
 }
 
+const ajustarTiempoPulsadores = function() {
+	pulsadores.forEach((pulsador) => {
+		pulsador.ajustarTiempo();
+	})
+}
+
 const obtenerSiguienteSecuencia = function() {
 	secuencia.push(Math.floor(Math.random() * 4));
 }
@@ -55,35 +62,36 @@ const reducirTemporizador = function() {
 }
 
 const iluminarSecuencia = async function () {
-	
-	var aux = 1;
 
-	do {
+	actualizarMostrarSecuencia(secuencia.length);
 
-		actualizarMostrarSecuencia(aux);
-
-		for (var i = 0; i < secuencia.length; i++) {
-			await iluminarPulsador(pulsadores[secuencia[i]]);
-		}
-
-		reducirTiempoPulsadores();
-
-		reducirTemporizador();
-
-		obtenerSiguienteSecuencia();
-
-		aux++;
-
-	} while (aux <= 10);
-
-	console.log("fin de las secuencias");
+	for (var i = 0; i < secuencia.length; i++) {
+		await iluminarPulsador(pulsadores[secuencia[i]]);
+	}
 }
 
-const pulsar = async function(pulsador) {
+const pulsar = async function(pulsador, indice) {
+
+	secuenciaPulsada.push(indice);
 
 	deshabilitarPulsadores();
 	await tocarPulsador(pulsador);
-	habilitarPulsadores();
+
+	if (comprobarSecuencia())
+		if (secuencia.length > secuenciaPulsada.length)
+			habilitarPulsadores();
+		else
+		{
+			// Algo...
+			await Clases.Reloj.esperar(2000);
+			ajustarTiempoPulsadores();
+			secuenciaPulsada = []
+			jugar();
+		}
+	else
+	{
+		//algo...
+	}
 }
 
 const habilitarPulsadores = function() {
@@ -103,13 +111,34 @@ const deshabilitarPulsadores = function() {
 
 const inicializarPulsadores = function() {
 
-	pulsadores.forEach((pulsador) => {
-		pulsador.asignarEvent("click", () => { pulsar(pulsador); });
-	})
+	pulsador_orange.asignarEvent("click", () => { pulsar(pulsador_orange, 0) });
+	pulsador_blue.asignarEvent("click", () => { pulsar(pulsador_blue, 1) });
+	pulsador_green.asignarEvent("click", () => { pulsar(pulsador_green, 2) });
+	pulsador_red.asignarEvent("click", () => { pulsar(pulsador_red, 3) });
 }
 
-// inicializarPulsadores();
-// habilitarPulsadores();
+const comprobarSecuencia = function() {
+	for (var i = 0; i < secuenciaPulsada.length; i++) {
+		if (secuencia[i] !== secuenciaPulsada[i])
+			throw new Error("Fin del juego!!!");
+	}
 
-obtenerSiguienteSecuencia();
-iluminarSecuencia();
+	return true;
+}
+
+const jugar = async function() {
+
+	obtenerSiguienteSecuencia();
+
+	await iluminarSecuencia();
+
+	reducirTiempoPulsadores();
+
+	reducirTemporizador();
+
+	habilitarPulsadores();
+}
+
+inicializarPulsadores();
+
+jugar();
