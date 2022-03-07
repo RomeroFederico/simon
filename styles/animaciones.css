@@ -1,20 +1,20 @@
-.animacion-orange:hover {
-  animation: glowing-orange 1300ms infinite;
+.animacion-orange {
+  animation-name: glowing-orange
 }
-.animacion-blue:hover {
-  animation: glowing-blue 1300ms infinite;
+.animacion-blue {
+  animation: glowing-blue;
 }
-.animacion-red:hover {
-  animation: glowing-red 1300ms infinite;
+.animacion-red {
+  animation: glowing-red;
 }
-.animacion-green:hover {
-  animation: glowing-green 1300ms infinite;
+.animacion-green {
+  animation: glowing-green;
 }
 
 @keyframes glowing-orange {
   0% {
     background-color: #f2ab1e;
-    box-shadow: 0 0 5px #f2ab1e;
+    box-shadow: 0 0 0px #f2ab1e;
   }
   50% {
     background-color: #f0cb11;
@@ -22,14 +22,14 @@
   }
   100% {
     background-color: #f2ab1e;
-    box-shadow: 0 0 5px #f2ab1e;
+    box-shadow: 0 0 0px #f2ab1e;
   }
 }
 
 @keyframes glowing-blue {
   0% {
     background-color: #1e62d0;
-    box-shadow: 0 0 5px #1e62d0;
+    box-shadow: 0 0 0px #1e62d0;
   }
   50% {
     background-color: #79bcff;
@@ -37,14 +37,14 @@
   }
   100% {
     background-color: #1e62d0;
-    box-shadow: 0 0 5px #1e62d0;
+    box-shadow: 0 0 0px #1e62d0;
   }
 }
 
 @keyframes glowing-red {
   0% {
     background-color: #c62d1f;
-    box-shadow: 0 0 5px #c62d1f;
+    box-shadow: 0 0 0px #c62d1f;
   }
   50% {
     background-color: #f24437;
@@ -52,14 +52,14 @@
   }
   100% {
     background-color: #c62d1f;
-    box-shadow: 0 0 5px #c62d1f;
+    box-shadow: 0 0 0px #c62d1f;
   }
 }
 
 @keyframes glowing-green {
-  0% {
+  10% {
     background-color: #528009;
-    box-shadow: 0 0 5px #528009;
+    box-shadow: 0 0 0px #528009;
   }
   50% {
     background-color: #a4e271;
@@ -67,6 +67,6 @@
   }
   100% {
     background-color: #528009;
-    box-shadow: 0 0 5px #528009;
+    box-shadow: 0 0 0px #528009;
   }
 }

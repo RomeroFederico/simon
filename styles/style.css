@@ -14,14 +14,20 @@ body {
 
 #div-simon {
 	position: relative;
-	width: 200px;
-	height: 200px;
+	width: 400px;
+	height: 400px;
+
+	border-radius: 50%;
+	background-color: black;
 }
 
 .pulsador {
 	position: absolute;
 	width: 50%;
 	height: 50%;
+
+	animation-duration: 2500ms !important;
+	animation-timing-function: ease-out;
 }
 
 .pulsador.orange {
@@ -52,7 +58,7 @@ body {
 	border-radius: 0 0 100% 0;
 }
 
-.centro {
+#centro {
 	width: 50%;
 	height: 50%;
 	position: absolute;
@@ -61,4 +67,12 @@ body {
 	border-radius: 50%;
 
 	background-color: black;
+}
+
+#panel {
+	border-radius: 50%;
+	width: 80%;
+	height: 80%;
+
+	background-color: white;
 }
