@@ -1,0 +1,64 @@
+body {
+	flex-direction: column;
+
+	height: 100vh;
+
+	background-color: midnightblue;
+}
+
+.centrar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#div-simon {
+	position: relative;
+	width: 200px;
+	height: 200px;
+}
+
+.pulsador {
+	position: absolute;
+	width: 50%;
+	height: 50%;
+}
+
+.pulsador.orange {
+	top: -10px;
+	left: -10px;
+	background-color: #f2ab1e;
+	border-radius: 100% 0 0 0;
+}
+
+.pulsador.blue {
+	top: -10px;
+	right: -10px;
+	background-color: #1e62d0;
+	border-radius: 0 100% 0 0;
+}
+
+.pulsador.red {
+	bottom: -10px;
+	left: -10px;
+	background-color: #c62d1f;
+	border-radius: 0 0 0 100%;
+}
+
+.pulsador.green {
+	bottom: -10px;
+	right: -10px;
+	background-color: #528009;
+	border-radius: 0 0 100% 0;
+}
+
+.centro {
+	width: 50%;
+	height: 50%;
+	position: absolute;
+	top: 25%;
+	left: 25%;
+	border-radius: 50%;
+
+	background-color: black;
+}
