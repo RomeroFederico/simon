@@ -63,7 +63,6 @@ export class ElementoHTML {
 
 	asignarEvent(evento, cb) {
 		this.eventoAsignado = { ev : evento, cb : cb };
-		this.addEvent();
 	}
 
 	addEvent() {
@@ -79,6 +78,14 @@ export class ElementoHTML {
 			this.elemento.classList.add(animacion);
 		else
 			this.elemento.classList.remove(animacion);
+	}
+
+	addClass (clase) {
+		this.elemento.classList.add(clase);
+	}
+
+	removeClass (clase) {
+		this.elemento.classList.remove(clase);
 	}
 }
 
@@ -116,26 +123,39 @@ export class Pulsador extends Boton {
 	{
 		super(id);
 		this.colorAsociado = colorAsociado;
+		this.duracionDefault = 1000;
+		this.duracion = 1000;
 	}
 
 	get animacionAsignada() {
 		return "animacion-" + this.colorAsociado;
 	}
 
-	get tiempo() {
-		return Number(this.style["animation-duration"].replace("ms", ""));
+	ajustarTiempo() {
+		this.style["animationDuration"] = (this.duracion).toString() + "ms";
 	}
 
 	reducirTiempo() {
-		this.style["animation-duration"] = (this.tiempo > 700? this.tiempo - 200 : this.tiempo).toString() + "ms !important";
+		if (this.duracion > 500)
+			this.duracion -= 100;
+
+		this.ajustarTiempo();
+	}
+
+	tocar() {
+		var cadena = (this.duracionDefault).toString() + "ms";
+		this.elemento.style['animationDuration'] = cadena;
+		this.iluminar();
 	}
 
 	iluminar() {
+		this.elemento.classList.remove("apagado");
 		Pulsador.ejecutar_animacion(this, this.animacionAsignada, true);
 	}
 
 	apagar() {
 		Pulsador.ejecutar_animacion(this, this.animacionAsignada, false);
+		this.elemento.classList.add("apagado");
 	}
 
 	static ejecutar_animacion(elemento, animacion, agregar) {
