@@ -6,6 +6,10 @@ body {
 	background-color: midnightblue;
 }
 
+.noMostrar {
+	display: none !important;
+}
+
 .miFuente {
 	font-family: 'Orbitron', sans-serif;
 	color: white;
@@ -17,6 +21,21 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.btnFrontal {
+	cursor: pointer;
+}
+
+.btnFrontal:hover {
+	filter: drop-shadow(1px 1px 0 white)
+	drop-shadow(-1px -1px 0 white)
+	drop-shadow(1px -1px 0 white)
+	drop-shadow(-1px 1px 0 white)
+	drop-shadow(1px 0px 0 white) 
+	drop-shadow(-1px 0px 0 white)  
+	drop-shadow(0px 1px 0 white) 
+	drop-shadow(0px -1px 0 white) !important;
 }
 
 #div-simon {
@@ -37,7 +56,6 @@ body {
 	width: 50%;
 	height: 50%;
 
-	animation-duration: 1000ms;
 	animation-timing-function: ease-out;
 }
 
@@ -152,8 +170,6 @@ body {
 	margin: 5px;
 
 	color: darkgreen;
-
-	justify-content: space-evenly;
 }
 
 #botones {
@@ -165,33 +181,44 @@ body {
 	justify-content: space-between;
 }
 
-#flecha-izq {
+#flecha_izq {
 	width: 0;
 	height: 0;
 	border-top: 10px solid transparent;
-	border-right: 10px solid white;
+	border-right: 10px solid #768d87;
 	border-bottom: 10px solid transparent;
 
 	filter: drop-shadow(-1px -1px 0 rgb(118, 118, 118));
 }
 
-#aceptar {
+#btn_aceptar {
 	background: white;
 	border-radius: 50%;
 	width: 15px;
 	height: 15px;
 
-	background-color:#768d87;
+	background-color: #768d87;
 
 	filter: drop-shadow(-1px -1px 0 rgb(118, 118, 118));
 }
 
-#flecha-der {
+#flecha_der {
 	width: 0;
 	height: 0;
 	border-top: 10px solid transparent;
-	border-left: 10px solid white;
+	border-left: 10px solid #768d87;
 	border-bottom: 10px solid transparent;
 
 	filter: drop-shadow(-1px -1px 0 rgb(118, 118, 118));
+}
+
+#menuSeleccion {
+	width: 100%;
+	justify-content: space-evenly;
+}
+
+#menuCargando {
+	height: 100%;
+	flex-direction: column;
+	justify-content: space-evenly;
 }

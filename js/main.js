@@ -6,12 +6,20 @@ const pulsador_blue = new HTML_Elements.Pulsador("pul-blue", "blue");
 const pulsador_red = new HTML_Elements.Pulsador("pul-red", "red");
 const pulsador_green = new HTML_Elements.Pulsador("pul-green", "green");
 
-const panel = new HTML_Elements.Div("panel");
+const flecha_izq = new HTML_Elements.BotonIcono("flecha_izq");
+const flecha_der = new HTML_Elements.BotonIcono("flecha_der");
+const btn_aceptar = new HTML_Elements.BotonIcono("btn_aceptar");
+
+// const panel = new HTML_Elements.Div("panel");
+
+const menuCargando = new HTML_Elements.Div("menuCargando"); 
+const menuSeleccion = new HTML_Elements.Div("menuSeleccion"); 
 
 const pulsadores = [];
 const secuencia = [];
 var secuenciaPulsada = [];
 var tiempo = 1000;
+var estado_de_juego = "apagado";
 
 pulsadores.push(pulsador_orange);
 pulsadores.push(pulsador_blue);
@@ -109,12 +117,52 @@ const deshabilitarPulsadores = function() {
 	})
 }
 
-const inicializarPulsadores = function() {
+const mover = function(direccion) {
+
+}
+
+const aceptar = function() {
+	estado_de_juego = "apagado";
+	ajustarse_al_estado();
+}
+
+const apagarPulsadores = async function() {
+
+	for (var i = 0; i < pulsadores.length; i++) {
+		pulsadores[i].apagar();
+	}
+	await Clases.Reloj.esperar(100);
+
+	return true;
+}
+
+const encenderPulsadores = async function() {
+	
+	for (var i = 0; i < pulsadores.length; i++) {
+		pulsadores[i].ajustarTiempo();
+		pulsadores[i].iluminar();
+	}
+
+	await Clases.Reloj.esperar(1000);
+	await apagarPulsadores();
+
+	return true;
+}
+
+const inicializarElementos = function() {
 
 	pulsador_orange.asignarEvent("click", () => { pulsar(pulsador_orange, 0) });
 	pulsador_blue.asignarEvent("click", () => { pulsar(pulsador_blue, 1) });
 	pulsador_green.asignarEvent("click", () => { pulsar(pulsador_green, 2) });
 	pulsador_red.asignarEvent("click", () => { pulsar(pulsador_red, 3) });
+
+	flecha_izq.asignarEvent("click", () => { mover("izq"); });
+	flecha_der.asignarEvent("click", () => { mover("der"); });
+	btn_aceptar.asignarEvent("click", aceptar);
+
+	flecha_izq.addEvent();
+	flecha_der.addEvent();
+	btn_aceptar.addEvent();
 }
 
 const comprobarSecuencia = function() {
@@ -124,6 +172,76 @@ const comprobarSecuencia = function() {
 	}
 
 	return true;
+}
+
+const ajustarse_al_estado = function() {
+	switch(estado_de_juego) {
+		case ("apagado"):
+			// DESACTIVAR TODOS LOS BOTONES EXCEPTO BTN_ACEPTAR, APAGAR PANTALLA.
+			switch_apagado();
+			break;
+		case ("cargando"):
+			// HABILITAR CARGANDO, DESACTIVO TODO LO DEMAS.
+			switch_cargando();
+			break;
+		case ("menuSeleccion"):
+			// HABILITAR MENU SELECCION, DESACTIVO PULSADORES, HABILITO PANEL FRONTAL.
+			switch_menu_seleccion();
+			break;
+		default:
+	}
+}
+
+const switch_apagado = function() {
+
+	console.log("Apagando...");
+
+	apagarPulsadores();
+	deshabilitarPulsadores();
+
+	flecha_der.desactivar();
+	flecha_izq.desactivar();
+	btn_aceptar.desactivar();
+
+	console.log("Apagando");
+}
+
+const switch_cargando = async function() {
+
+	console.log("Cargando...");
+
+	apagarPulsadores();
+	deshabilitarPulsadores();
+
+	flecha_der.desactivar();
+	flecha_izq.desactivar();
+	btn_aceptar.desactivar();
+
+	menuCargando.mostrar();
+
+	await Clases.Reloj.esperar(2000);
+
+	menuCargando.ocultar();
+
+	console.log("Carga completa");
+
+	estado_de_juego = "menuSeleccion";
+
+	ajustarse_al_estado();
+}
+
+const switch_menu_seleccion = function() {
+
+	console.log("mostrando: menu seleccion");
+
+	apagarPulsadores();
+	deshabilitarPulsadores();
+
+	flecha_der.activar();
+	flecha_izq.activar();
+	btn_aceptar.activar();
+
+	menuSeleccion.mostrar();
 }
 
 const jugar = async function() {
@@ -139,6 +257,9 @@ const jugar = async function() {
 	habilitarPulsadores();
 }
 
-inicializarPulsadores();
+inicializarElementos();
 
-jugar();
+//jugar();
+
+estado_de_juego = "cargando";
+ajustarse_al_estado();

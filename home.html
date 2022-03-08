@@ -16,6 +16,8 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 
+		<script src="https://kit.fontawesome.com/281673d4e8.js" crossorigin="anonymous"></script>
+
 		<title>SIMON</title>
 	</head>
 
@@ -34,17 +36,29 @@
 				<div id = "titulo" class = "centrar miFuente">SIMON</div>
 				
 				<div id = "pantalla" class = "centrar miFuente">
+
+					<div id = "menuCargando" class = "centrar noMostrar">
 					
-					<div class = "shake-izq"><</div>
-					<div>CLASICO</div>
-					<div class = "shake-der">></div>
+						<i class="fa-solid fa-spinner fa-spin-pulse"></i>
+
+						CARGANDO
+
+					</div>
+
+					<div id = "menuSeleccion" class = "centrar noMostrar">
+					
+						<div class = "shake-izq"><</div>
+						<div>CLASICO</div>
+						<div class = "shake-der">></div>
+
+					</div>
 
 				</div>
 
 				<div id = "botones" class = "centrar">
-					<div id = "flecha-izq"></div>
-					<div id = "aceptar"></div>
-					<div id = "flecha-der"></div>
+					<div id = "flecha_izq" class = "btnFrontal"></div>
+					<div id = "btn_aceptar" class = "btnFrontal"></div>
+					<div id = "flecha_der" class = "btnFrontal"></div>
 				</div>
 
 			</div>

@@ -102,6 +102,14 @@ export class Div extends ElementoHTML {
 	volverAlValorInicial () {
 		this.borrar();
 	}
+
+	mostrar = function() {
+		this.elemento.classList.remove("noMostrar");
+	}
+
+	ocultar = function() {
+		this.elemento.classList.add("noMostrar");
+	}
 }
 
 export class Boton extends ElementoHTML {
@@ -114,6 +122,19 @@ export class Boton extends ElementoHTML {
 	activar() {
 		super.activar()
 		this.elemento.classList.remove("btnDesactivado");
+	}
+}
+
+export class BotonIcono extends ElementoHTML {
+
+	desactivar() {
+		super.desactivar();
+		this.elemento.classList.remove("btnFrontal");
+	}
+
+	activar() {
+		super.activar();
+		this.elemento.classList.add("btnFrontal");
 	}
 }
 
@@ -131,8 +152,16 @@ export class Pulsador extends Boton {
 		return "animacion-" + this.colorAsociado;
 	}
 
+	get duracion_de_la_animacion() {
+		return this.style["animationDuration"];
+	}
+
+	set duracion_de_la_animacion(valor) {
+		this.style["animationDuration"] = valor.toString() + "ms";
+	}
+
 	ajustarTiempo() {
-		this.style["animationDuration"] = (this.duracion).toString() + "ms";
+		this.duracion_de_la_animacion = this.duracion;
 	}
 
 	reducirTiempo() {
@@ -143,13 +172,17 @@ export class Pulsador extends Boton {
 	}
 
 	tocar() {
-		var cadena = (this.duracionDefault).toString() + "ms";
-		this.elemento.style['animationDuration'] = cadena;
+		this.duracion_de_la_animacion = this.duracionDefault;
 		this.iluminar();
 	}
 
 	iluminar() {
+
+		if (this.duracion_de_la_animacion === "")
+			this.duracion_de_la_animacion = this.duracion;
+
 		this.elemento.classList.remove("apagado");
+
 		Pulsador.ejecutar_animacion(this, this.animacionAsignada, true);
 	}
 
