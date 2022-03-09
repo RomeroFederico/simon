@@ -13,6 +13,7 @@ const btn_aceptar = new HTML_Elements.BotonIcono("btn_aceptar");
 const menuCargando = new HTML_Elements.Div("menuCargando", false); 
 const menuSeleccion = new HTML_Elements.Div("menuSeleccion", false);
 const menuJuegoClasico = new HTML_Elements.Div("menuJuegoClasico", false);
+const menuJuegoClasicoSPLASH = new HTML_Elements.Div("menuJuegoClasicoSPLASH", false);
 const menuSuccess = new HTML_Elements.Div("menuSuccess", false);
 const menuDerrota = new HTML_Elements.Div("menuDerrota", false);
 
@@ -25,7 +26,7 @@ const secuencia = [];
 const modoDeJuego = ["CLASICO", "MODERNO", "PUNTAJES", "OPCIONES", "APAGAR"];
 var modoDeJuegoSeleccionado = 0;
 var secuenciaPulsada = [];
-var tiempo = 1000;
+var tiempo = 700;
 var estado_de_juego = "apagado";
 
 pulsadores.push(pulsador_orange);
@@ -72,8 +73,15 @@ const reducirTiempoPulsadores = function() {
 }
 
 const reducirTemporizador = function() {
-	if (tiempo >= 500)
-		tiempo -= 100;
+	if (modoDeJuego[modoDeJuegoSeleccionado] === "CLASICO")
+		if (tiempo >= 300)
+		{
+			tiempo -= 25;
+			console.log("Tiempo reducido : " + tiempo);
+		}
+	else
+		if (tiempo >= 300)
+			tiempo -= 200;
 }
 
 const iluminarSecuencia = async function () {
@@ -101,7 +109,7 @@ const pulsar = async function(pulsador, indice) {
 			cambiar_pantalla();
 
 			encenderPulsadoresCorrecto(true);	
-			await Clases.Reloj.esperar(2000);
+			await Clases.Reloj.esperar(1000);
 			encenderPulsadoresCorrecto(false);
 
 			ajustarTiempoPulsadores();
@@ -110,7 +118,7 @@ const pulsar = async function(pulsador, indice) {
 			estado_de_juego = "clasico";
 			cambiar_pantalla();
 
-			await Clases.Reloj.esperar(1500);
+			// await Clases.Reloj.esperar(750);
 
 			jugar();
 		}
@@ -146,7 +154,7 @@ const mover = function(direccion) {
 }
 
 const aceptar = function() {
-	estado_de_juego = "apagado";
+	estado_de_juego = "SPLASHclasico";
 	ajustarse_al_estado();
 }
 
@@ -247,7 +255,15 @@ const ajustarse_al_estado = function() {
 			// HABILITAR MENU SELECCION, DESACTIVO PULSADORES, HABILITO PANEL FRONTAL.
 			switch_menu_seleccion();
 			break;
+		case ("SPLASHclasico"):
+			switch_modo_clasico_SPLASH();
+			break;
+		case ("clasico"):
+			// HABILITAR PANTALLA MODO CLASICO, DESACTIVO TODOS LOS BOTONES.
+			switch_modo_clasico();
+			break;
 		default:
+
 	}
 }
 
@@ -255,6 +271,7 @@ const cambiar_pantalla = function() {
 
 	menuCargando.ocultar();
 	menuSeleccion.ocultar();
+	menuJuegoClasicoSPLASH.ocultar();
 	menuJuegoClasico.ocultar();
 	menuSuccess.ocultar();
 	menuDerrota.ocultar();
@@ -264,6 +281,9 @@ const cambiar_pantalla = function() {
 
 	if (estado_de_juego === "menuSeleccion")
 		menuSeleccion.mostrar();
+
+	if (estado_de_juego === "SPLASHclasico")
+		menuJuegoClasicoSPLASH.mostrar();
 
 	if (estado_de_juego === "clasico")
 		menuJuegoClasico.mostrar();
@@ -321,24 +341,67 @@ const switch_menu_seleccion = function() {
 	btn_aceptar.activar();
 }
 
+const switch_modo_clasico_SPLASH = async function() {
+
+	console.log("mostrando: juego clasico SPLASH");
+
+	apagarPulsadores();
+	deshabilitarPulsadores();
+
+	flecha_der.desactivar();
+	flecha_izq.desactivar();
+	btn_aceptar.desactivar();
+
+	await Clases.Reloj.esperar(1500);
+
+	estado_de_juego = "clasico";
+
+	ajustarse_al_estado();
+}
+
+const switch_modo_clasico = async function() {
+
+	console.log("mostrando: juego clasico");
+
+	apagarPulsadores();
+	deshabilitarPulsadores();
+
+	flecha_der.desactivar();
+	flecha_izq.desactivar();
+	btn_aceptar.desactivar();
+
+	await Clases.Reloj.esperar(250);
+
+	jugar();
+}
+
 const jugar = async function() {
 
 	obtenerSiguienteSecuencia();
 
+	await Clases.Reloj.esperar(750);
+
 	await iluminarSecuencia();
 
-	reducirTiempoPulsadores();
+	console.log(convertirSecuencia());
 
+	reducirTiempoPulsadores();
 	reducirTemporizador();
 
 	habilitarPulsadores();
 }
 
+function convertirSecuencia() {
+	return secuencia.map((elemento) => {
+		return pulsadores[elemento].colorAsociado;
+	});
+}
+
 inicializarElementos();
 
-estado_de_juego = "clasico";
-cambiar_pantalla();
+estado_de_juego = "cargando";
+//cambiar_pantalla();
 
-jugar();
+//jugar();
 
-//ajustarse_al_estado();
+ajustarse_al_estado();

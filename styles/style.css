@@ -17,6 +17,16 @@ body {
 	font-weight: bold;
 }
 
+.subrayado {
+	text-decoration: underline;
+	text-underline-offset: 5px;
+	letter-spacing: 2px;
+}
+
+.separar-texto {
+	letter-spacing: 4px;
+}
+
 .centrar {
 	display: flex;
 	justify-content: center;
@@ -232,6 +242,17 @@ body {
 	height: 100%;
 	flex-direction: column;
 	justify-content: space-evenly;
+}
+
+#menuJuegoClasicoSPLASH {
+	height: 100%;
+	width: 100%;
+
+	flex-direction: column;
+	justify-content: space-evenly;
+
+	background-color: rgba(0, 0, 0, 0.7);
+	color: lightgreen;
 }
 
 #menuSuccess {
