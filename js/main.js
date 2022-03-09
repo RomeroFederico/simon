@@ -18,17 +18,20 @@ const menuSuccess = new HTML_Elements.Div("menuSuccess", false);
 const menuDerrota = new HTML_Elements.Div("menuDerrota", false);
 
 const numSecuenciaPantalla = new HTML_Elements.Div("numSecuenciaPantalla", false);
+const numRecord = new HTML_Elements.Div("numRecord", false);
 const banPulsar = new HTML_Elements.Div("banPulsar", false);
 
 const menuSeleccionSeleccionado = new HTML_Elements.Div("menuSeleccionSeleccionado", false);
 
 const pulsadores = [];
-const secuencia = [];
+var secuencia = [];
 const modoDeJuego = ["CLASICO", "MODERNO", "PUNTAJES", "OPCIONES", "APAGAR"];
 var modoDeJuegoSeleccionado = 0;
 var secuenciaPulsada = [];
+var tiempoDefault = 700;
 var tiempo = 700;
 var estado_de_juego = "apagado";
+var record = 5; // PROVISORIO
 
 pulsadores.push(pulsador_orange);
 pulsadores.push(pulsador_blue);
@@ -36,7 +39,17 @@ pulsadores.push(pulsador_green);
 pulsadores.push(pulsador_red);
 
 const actualizarMostrarSecuencia = function(string) {
-	numSecuenciaPantalla.escribir(secuencia.length);
+	if (string === undefined)
+		numSecuenciaPantalla.escribir(secuencia.length);
+	else
+		numSecuenciaPantalla.escribir(string);
+}
+
+const actualizarRecord = function() {
+	if (secuencia.length >= record)
+		numRecord.escribir(secuencia.length);
+	else
+		numRecord.escribir(record);
 }
 
 const tocarPulsador = async function (pulsador) {
@@ -60,6 +73,12 @@ const iluminarPulsador = async function (pulsador) {
 const ajustarTiempoPulsadores = function() {
 	pulsadores.forEach((pulsador) => {
 		pulsador.ajustarTiempo();
+	})
+}
+
+const ajustarTiempoPulsadoresDefault = function() {
+	pulsadores.forEach((pulsador) => {
+		pulsador.ajustarTiempoDefault();
 	})
 }
 
@@ -87,8 +106,6 @@ const reducirTemporizador = function() {
 
 const iluminarSecuencia = async function () {
 
-	actualizarMostrarSecuencia(secuencia.length);
-
 	for (var i = 0; i < secuencia.length; i++) {
 		await iluminarPulsador(pulsadores[secuencia[i]]);
 	}
@@ -105,28 +122,46 @@ const pulsar = async function(pulsador, indice) {
 		if (secuencia.length > secuenciaPulsada.length)
 			habilitarPulsadores();
 		else
-		{
-			estado_de_juego = "success";
-			cambiar_pantalla();
-
-			encenderPulsadoresCorrecto(true);	
-			await Clases.Reloj.esperar(1000);
-			encenderPulsadoresCorrecto(false);
-
-			ajustarTiempoPulsadores();
-			secuenciaPulsada = [];
-
-			estado_de_juego = "clasico";
-			cambiar_pantalla();
-
-			jugar();
-		}
+			continuarPartida();
 	else
-	{
-		estado_de_juego = "derrota";
-		cambiar_pantalla();
-		encenderPulsadoresDerrota(true);
-	}
+		finDeLaPartida();
+}
+
+const continuarPartida = async function() {
+	estado_de_juego = "success";
+	cambiar_pantalla();
+
+	encenderPulsadoresCorrecto(true);	
+	await Clases.Reloj.esperar(1000);
+	encenderPulsadoresCorrecto(false);
+
+	ajustarTiempoPulsadores();
+	secuenciaPulsada = [];
+
+	estado_de_juego = "clasico";
+	cambiar_pantalla();
+
+	jugar();
+}
+
+const finDeLaPartida = async function() {
+	estado_de_juego = "derrota";
+	cambiar_pantalla();
+
+	encenderPulsadoresDerrota(true);
+	await Clases.Reloj.esperar(3000);
+	encenderPulsadoresDerrota(false);
+
+	ajustarTiempoPulsadoresDefault();
+	tiempo = tiempoDefault;
+
+	secuencia = [];
+	secuenciaPulsada = [];
+
+	actualizarMostrarSecuencia(1);
+
+	estado_de_juego = "menuSeleccion";
+	ajustarse_al_estado();
 }
 
 const habilitarPulsadores = function() {
@@ -231,6 +266,9 @@ const inicializarElementos = function() {
 	flecha_izq.activado = true;
 	flecha_der.activado = true;
 	btn_aceptar.activado = true;
+
+	actualizarMostrarSecuencia(1);
+	actualizarRecord();
 }
 
 const comprobarSecuencia = function() {
@@ -384,6 +422,9 @@ const jugar = async function() {
 
 	obtenerSiguienteSecuencia();
 
+	actualizarMostrarSecuencia();
+	actualizarRecord();
+
 	await Clases.Reloj.esperar(750);
 
 	await iluminarSecuencia();
@@ -392,8 +433,6 @@ const jugar = async function() {
 
 	reducirTiempoPulsadores();
 	reducirTemporizador();
-
-	//banPulsar.ocultar();
 
 	habilitarPulsadores();
 }

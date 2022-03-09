@@ -186,7 +186,7 @@ export class Pulsador extends ElementoHTML {
 	{
 		super(id);
 		this.colorAsociado = colorAsociado;
-		this.duracionDefault = 1000;
+		this.duracionDefault = 700;
 		this.duracion = 700;
 		this.apagado = true;
 	}
@@ -219,6 +219,11 @@ export class Pulsador extends ElementoHTML {
 			super.desactivar();
 			this.removeClass("pulsadorHabilitado");
 		}
+	}
+
+	ajustarTiempoDefault() {
+		this.duracion = this.duracionDefault;
+		this.ajustarTiempo();
 	}
 
 	ajustarTiempo() {
