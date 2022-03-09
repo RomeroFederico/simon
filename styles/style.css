@@ -57,11 +57,16 @@ body {
 	height: 50%;
 
 	animation-timing-function: ease-out;
+
+	cursor: pointer;
+}
+
+.pulsadorHabilitado {
+	
 }
 
 .pulsadorHabilitado:hover {
 	opacity: 1;
-	cursor: pointer;
 }
 
 .pulsador.orange {

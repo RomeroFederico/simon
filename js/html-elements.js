@@ -5,6 +5,7 @@ export class ElementoHTML {
 		this.eventoAsignado = undefined;
 		this.cursorInicial = this.elemento.style.cursor;
 		this.valorDefecto = this.elemento.value;
+		this.activado = false;
 	}
 
 	get valor() {
@@ -41,24 +42,40 @@ export class ElementoHTML {
 		return this.width;
 	}
 
+	setCursorDefault() {
+		this.elemento.style.cursor = "default"
+	}
+
 	volverAlValorInicial () {
 		this.valor = this.valorDefecto;
 	}
 
 	activar() {
-		this.elemento.disabled = false;
-		this.elemento.style.cursor = this.cursorInicial;
 
-		if (this.tieneEvento)
-			this.addEvent();
+		if (!(this.activado)) {
+
+			this.elemento.disabled = false;
+			this.elemento.style.cursor = this.cursorInicial;
+
+			if (this.tieneEvento)
+				this.addEvent();
+
+			this.activado = true;
+		}
 	}
 
 	desactivar() {
-		this.elemento.disabled = true;
-		this.elemento.style.cursor = 'default';
 
-		if (this.tieneEvento)
-			this.deleteEvent();
+		if (this.activado) {
+
+			this.elemento.disabled = true;
+			this.setCursorDefault();
+
+			if (this.tieneEvento)
+				this.deleteEvent();
+
+			this.activado = false;
+		}
 	}
 
 	asignarEvent(evento, cb) {
@@ -91,6 +108,15 @@ export class ElementoHTML {
 
 export class Div extends ElementoHTML {
 
+	constructor(id, visible) {
+		super(id);
+		this.visible = visible;
+	}
+
+	get valor() {
+		return this.elemento.innerHTML;
+	}
+
 	escribir (html_string) {
 		this.elemento.innerHTML = html_string;
 	}
@@ -104,41 +130,57 @@ export class Div extends ElementoHTML {
 	}
 
 	mostrar = function() {
-		this.elemento.classList.remove("noMostrar");
+		if (!(this.visible))
+		{
+			this.elemento.classList.remove("noMostrar");
+			this.visible = true;
+		}
 	}
 
 	ocultar = function() {
-		this.elemento.classList.add("noMostrar");
+		if (this.visible)
+		{
+			this.elemento.classList.add("noMostrar");
+			this.visible = false;
+		}
 	}
 }
 
 export class Boton extends ElementoHTML {
 
 	desactivar() {
-		super.desactivar();
-		this.elemento.classList.add("btnDesactivado");
+		if (this.activado) {
+			super.desactivar();
+			this.elemento.classList.add("btnDesactivado");
+		}
 	}
 
 	activar() {
-		super.activar()
-		this.elemento.classList.remove("btnDesactivado");
+		if (!(this.activado)) {
+			super.activar()
+			this.elemento.classList.remove("btnDesactivado");
+		}
 	}
 }
 
 export class BotonIcono extends ElementoHTML {
 
 	desactivar() {
-		super.desactivar();
-		this.elemento.classList.remove("btnFrontal");
+		if (this.activado) {
+			super.desactivar();
+			this.elemento.classList.remove("btnFrontal");
+		}
 	}
 
 	activar() {
-		super.activar();
-		this.elemento.classList.add("btnFrontal");
+		if (!(this.activado)) {
+			super.activar();
+			this.elemento.classList.add("btnFrontal");
+		}
 	}
 }
 
-export class Pulsador extends Boton {
+export class Pulsador extends ElementoHTML {
 
 	constructor(id, colorAsociado)
 	{
@@ -146,6 +188,7 @@ export class Pulsador extends Boton {
 		this.colorAsociado = colorAsociado;
 		this.duracionDefault = 1000;
 		this.duracion = 1000;
+		this.apagado = true;
 	}
 
 	get animacionAsignada() {
@@ -158,6 +201,24 @@ export class Pulsador extends Boton {
 
 	set duracion_de_la_animacion(valor) {
 		this.style["animationDuration"] = valor.toString() + "ms";
+	}
+
+	activar() {
+
+		if (!(this.activado))
+		{
+			super.activar();
+			this.addClass("pulsadorHabilitado");
+		}
+	}
+
+	desactivar() {
+
+		if (this.activado)
+		{
+			super.desactivar();
+			this.removeClass("pulsadorHabilitado");
+		}
 	}
 
 	ajustarTiempo() {
@@ -178,17 +239,28 @@ export class Pulsador extends Boton {
 
 	iluminar() {
 
-		if (this.duracion_de_la_animacion === "")
-			this.duracion_de_la_animacion = this.duracion;
+		if (this.apagado) {
 
-		this.elemento.classList.remove("apagado");
+			if (this.duracion_de_la_animacion === "")
+				this.duracion_de_la_animacion = this.duracion;
 
-		Pulsador.ejecutar_animacion(this, this.animacionAsignada, true);
+			this.elemento.classList.remove("apagado");
+
+			Pulsador.ejecutar_animacion(this, this.animacionAsignada, true);
+
+			this.apagado = false;
+		}
 	}
 
 	apagar() {
-		Pulsador.ejecutar_animacion(this, this.animacionAsignada, false);
-		this.elemento.classList.add("apagado");
+
+		if (!(this.apagado)) {
+
+			Pulsador.ejecutar_animacion(this, this.animacionAsignada, false);
+			this.elemento.classList.add("apagado");
+
+			this.apagado = true;
+		}
 	}
 
 	static ejecutar_animacion(elemento, animacion, agregar) {

@@ -10,13 +10,15 @@ const flecha_izq = new HTML_Elements.BotonIcono("flecha_izq");
 const flecha_der = new HTML_Elements.BotonIcono("flecha_der");
 const btn_aceptar = new HTML_Elements.BotonIcono("btn_aceptar");
 
-// const panel = new HTML_Elements.Div("panel");
+const menuCargando = new HTML_Elements.Div("menuCargando", false); 
+const menuSeleccion = new HTML_Elements.Div("menuSeleccion", false);
 
-const menuCargando = new HTML_Elements.Div("menuCargando"); 
-const menuSeleccion = new HTML_Elements.Div("menuSeleccion"); 
+const menuSeleccionSeleccionado = new HTML_Elements.Div("menuSeleccionSeleccionado", false);
 
 const pulsadores = [];
 const secuencia = [];
+const modoDeJuego = ["CLASICO", "MODERNO", "PUNTAJES", "OPCIONES", "APAGAR"];
+var modoDeJuegoSeleccionado = 0;
 var secuenciaPulsada = [];
 var tiempo = 1000;
 var estado_de_juego = "apagado";
@@ -105,20 +107,24 @@ const pulsar = async function(pulsador, indice) {
 const habilitarPulsadores = function() {
 
 	pulsadores.forEach((pulsador) => {
-		pulsador.addClass("pulsadorHabilitado");
-		pulsador.addEvent();
+		pulsador.activar();
 	})
 }
 
 const deshabilitarPulsadores = function() {
 	pulsadores.forEach((pulsador) => {
-		pulsador.removeClass("pulsadorHabilitado");
-		pulsador.deleteEvent();
+		pulsador.desactivar();
 	})
 }
 
 const mover = function(direccion) {
 
+	if (direccion === "izq")
+		modoDeJuegoSeleccionado = modoDeJuegoSeleccionado === 0 ? modoDeJuego.length - 1 : modoDeJuegoSeleccionado - 1;
+	else
+		modoDeJuegoSeleccionado = modoDeJuegoSeleccionado === modoDeJuego.length - 1 ? 0 : modoDeJuegoSeleccionado + 1;
+
+	menuSeleccionSeleccionado.escribir(modoDeJuego[modoDeJuegoSeleccionado]);
 }
 
 const aceptar = function() {
@@ -156,6 +162,11 @@ const inicializarElementos = function() {
 	pulsador_green.asignarEvent("click", () => { pulsar(pulsador_green, 2) });
 	pulsador_red.asignarEvent("click", () => { pulsar(pulsador_red, 3) });
 
+	pulsador_orange.setCursorDefault();
+	pulsador_blue.setCursorDefault();
+	pulsador_green.setCursorDefault();
+	pulsador_red.setCursorDefault();
+
 	flecha_izq.asignarEvent("click", () => { mover("izq"); });
 	flecha_der.asignarEvent("click", () => { mover("der"); });
 	btn_aceptar.asignarEvent("click", aceptar);
@@ -163,6 +174,10 @@ const inicializarElementos = function() {
 	flecha_izq.addEvent();
 	flecha_der.addEvent();
 	btn_aceptar.addEvent();
+
+	flecha_izq.activado = true;
+	flecha_der.activado = true;
+	btn_aceptar.activado = true;
 }
 
 const comprobarSecuencia = function() {
@@ -175,6 +190,9 @@ const comprobarSecuencia = function() {
 }
 
 const ajustarse_al_estado = function() {
+
+	cambiar_pantalla();
+
 	switch(estado_de_juego) {
 		case ("apagado"):
 			// DESACTIVAR TODOS LOS BOTONES EXCEPTO BTN_ACEPTAR, APAGAR PANTALLA.
@@ -190,6 +208,18 @@ const ajustarse_al_estado = function() {
 			break;
 		default:
 	}
+}
+
+const cambiar_pantalla = function() {
+
+	menuCargando.ocultar();
+	menuSeleccion.ocultar();
+
+	if (estado_de_juego === "cargando")
+		menuCargando.mostrar();
+
+	if (estado_de_juego === "menuSeleccion")
+		menuSeleccion.mostrar();
 }
 
 const switch_apagado = function() {
@@ -217,11 +247,7 @@ const switch_cargando = async function() {
 	flecha_izq.desactivar();
 	btn_aceptar.desactivar();
 
-	menuCargando.mostrar();
-
 	await Clases.Reloj.esperar(2000);
-
-	menuCargando.ocultar();
 
 	console.log("Carga completa");
 
@@ -240,8 +266,6 @@ const switch_menu_seleccion = function() {
 	flecha_der.activar();
 	flecha_izq.activar();
 	btn_aceptar.activar();
-
-	menuSeleccion.mostrar();
 }
 
 const jugar = async function() {
