@@ -240,8 +240,10 @@ body {
 
 #menuJuegoClasico {
 	height: 100%;
-	flex-direction: column;
-	justify-content: space-evenly;
+	
+	display: grid;
+	grid-template-columns: 33px 34px 33px;
+	grid-template-rows: 23px 24px 23px;
 }
 
 #menuJuegoClasicoSPLASH {
@@ -253,6 +255,33 @@ body {
 
 	background-color: rgba(0, 0, 0, 0.7);
 	color: lightgreen;
+}
+
+#infoSecuencia {
+	grid-column: 1 / 2;
+	grid-row: 1 / 2;
+
+	font-size: 8px;
+
+	flex-direction: column;
+}
+
+#infoSecuenciaRecord {
+	grid-column: 3/ 4;
+	grid-row: 1 / 2;
+
+	font-size: 8px;
+
+	flex-direction: column;
+}
+
+#infoTocar {
+	grid-column: 2 / 3;
+	grid-row: 2 / 3;
+}
+
+.banned {
+	opacity: 0.5;
 }
 
 #menuSuccess {

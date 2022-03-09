@@ -18,6 +18,7 @@ const menuSuccess = new HTML_Elements.Div("menuSuccess", false);
 const menuDerrota = new HTML_Elements.Div("menuDerrota", false);
 
 const numSecuenciaPantalla = new HTML_Elements.Div("numSecuenciaPantalla", false);
+const banPulsar = new HTML_Elements.Div("banPulsar", false);
 
 const menuSeleccionSeleccionado = new HTML_Elements.Div("menuSeleccionSeleccionado", false);
 
@@ -118,8 +119,6 @@ const pulsar = async function(pulsador, indice) {
 			estado_de_juego = "clasico";
 			cambiar_pantalla();
 
-			// await Clases.Reloj.esperar(750);
-
 			jugar();
 		}
 	else
@@ -135,12 +134,16 @@ const habilitarPulsadores = function() {
 	pulsadores.forEach((pulsador) => {
 		pulsador.activar();
 	})
+
+	banPulsar.ocultar();
 }
 
 const deshabilitarPulsadores = function() {
 	pulsadores.forEach((pulsador) => {
 		pulsador.desactivar();
 	})
+
+	banPulsar.mostrar();
 }
 
 const mover = function(direccion) {
@@ -377,6 +380,8 @@ const switch_modo_clasico = async function() {
 
 const jugar = async function() {
 
+	banPulsar.mostrar();
+
 	obtenerSiguienteSecuencia();
 
 	await Clases.Reloj.esperar(750);
@@ -387,6 +392,8 @@ const jugar = async function() {
 
 	reducirTiempoPulsadores();
 	reducirTemporizador();
+
+	//banPulsar.ocultar();
 
 	habilitarPulsadores();
 }
