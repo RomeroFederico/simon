@@ -21,6 +21,9 @@ const numSecuenciaPantalla = new HTML_Elements.Div("numSecuenciaPantalla", false
 const numRecord = new HTML_Elements.Div("numRecord", false);
 const banPulsar = new HTML_Elements.Div("banPulsar", false);
 
+const numSecuenciaFin = new HTML_Elements.Div("numSecuenciaFin", false);
+const newRecord = new HTML_Elements.Div("newRecord", false);
+
 const menuSeleccionSeleccionado = new HTML_Elements.Div("menuSeleccionSeleccionado", false);
 
 const pulsadores = [];
@@ -50,6 +53,12 @@ const actualizarRecord = function() {
 		numRecord.escribir(secuencia.length);
 	else
 		numRecord.escribir(record);
+}
+
+const escribirMensajeGameOver = function() {
+	numSecuenciaFin.escribir("max secuencia: " + secuencia.length);
+	if (secuencia.length >= record)
+		newRecord.mostrar();
 }
 
 const tocarPulsador = async function (pulsador) {
@@ -148,6 +157,8 @@ const finDeLaPartida = async function() {
 	estado_de_juego = "derrota";
 	cambiar_pantalla();
 
+	escribirMensajeGameOver();
+
 	encenderPulsadoresDerrota(true);
 	await Clases.Reloj.esperar(3000);
 	encenderPulsadoresDerrota(false);
@@ -157,6 +168,8 @@ const finDeLaPartida = async function() {
 
 	secuencia = [];
 	secuenciaPulsada = [];
+
+	newRecord.ocultar();
 
 	actualizarMostrarSecuencia(1);
 
@@ -450,4 +463,4 @@ estado_de_juego = "cargando";
 
 //jugar();
 
-ajustarse_al_estado();
+//ajustarse_al_estado();

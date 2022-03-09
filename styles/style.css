@@ -262,6 +262,7 @@ body {
 	grid-row: 1 / 2;
 
 	font-size: 8px;
+	font-weight: 500;
 
 	flex-direction: column;
 }
@@ -271,6 +272,7 @@ body {
 	grid-row: 1 / 2;
 
 	font-size: 8px;
+	font-weight: 500;
 
 	flex-direction: column;
 }
@@ -296,4 +298,116 @@ body {
 	width: 100%;
 	background-color: rgba(0, 0, 0, 0.7);
 	color: lightgreen;
+
+	flex-direction: column;
+	justify-content: space-evenly;
+}
+
+#menuDerrota div {
+	font-size: 9px;
+}
+
+#menuDerrota i {
+	transform: translateY(-4%);
+}
+
+#menuJuegoModerno {
+	height: 100%;
+	
+	display: grid;
+	grid-template-columns: 33px 34px 33px;
+	grid-template-rows: 23px 24px 23px;
+}
+
+#infoScore {
+	grid-column: 1 / 2;
+	grid-row: 1 / 2;
+
+	font-size: 8px;
+	font-weight: 700;
+
+	flex-direction: column;
+}
+
+#infoScoreRecord {
+	grid-column: 3/ 4;
+	grid-row: 1 / 2;
+
+	font-size: 8px;
+	font-weight: 700;
+
+	flex-direction: column;
+}
+
+#infoTocarM {
+	grid-column: 2 / 3;
+	grid-row: 2 / 3;
+}
+
+#infoLivesIcono {
+	grid-column: 3 / 4;
+	grid-row: 2 / 3;
+
+	align-items: flex-end;
+	justify-content: flex-end;
+	margin-right: 2px;
+}
+
+#infoLives {
+	grid-column: 3 / 4;
+	grid-row: 3 / 4;
+
+	font-size: 7px;
+
+	justify-content: flex-end;
+
+	font-weight: 700;
+
+	margin-top: 10px;
+	margin-right: 8px;
+}
+
+#infoNivelIcono {
+	grid-column: 1 / 2;
+	grid-row: 2 / 3;
+
+	align-items: flex-end;
+	justify-content: flex-start;
+	margin-left: 2px;
+}
+
+#infoNivel {
+	grid-column: 1 / 2;
+	grid-row: 3 / 4;
+
+	font-size: 7px;
+
+	justify-content: flex-start;
+
+	font-weight: 700;
+
+	margin-top: 10px;
+	margin-left: 2px;
+}
+
+#infoExperiencia {
+	grid-column: 2 / 3;
+	grid-row: 3 / 4;
+
+	align-items: flex-end;
+}
+
+#barraExperiencia {
+	width: 34px;
+	height: 6px;
+
+	border: solid 1px darkgreen;
+
+	opacity: 0.5;
+
+	border-radius: 5px;
+
+	margin-bottom: 3px;
+
+	border-left-width: 34px;
 }
