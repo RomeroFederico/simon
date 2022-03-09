@@ -11,6 +11,16 @@
   animation-name: glowing-green;
 }
 
+.animacion-derrota {
+  animation: glowing-danger 1500ms infinite, encender-apagar 1500ms steps(2) infinite;
+  animation-duration: 1500ms !important;
+}
+
+.animacion-correcto {
+  animation: glowing-success 1000ms infinite, encender-apagar 1000ms steps(2) infinite;
+  animation-duration: 1000ms !important;
+}
+
 @keyframes glowing-orange {
   0% {
     background-color: #f2ab1e;
@@ -68,6 +78,61 @@
   100% {
     background-color: #528009;
     box-shadow: 0 0 0px #528009;
+  }
+}
+
+@keyframes glowing-danger {
+  0% {
+    background-color: #c62d1f;
+    box-shadow: 0 0 0px #c62d1f;
+  }
+  10% {
+    background-color: #f24437;
+    box-shadow: 0 0 5px #f24437;
+  }
+  20% {
+    background-color: #c62d1f;
+    box-shadow: 0 0 0px #c62d1f;
+  }
+  30% {
+    background-color: #f24437;
+    box-shadow: 0 0 5px #f24437;
+  }
+  40%, 100% {
+    background-color: #c62d1f;
+    box-shadow: 0 0 0px #c62d1f;
+  }
+}
+
+@keyframes glowing-success {
+  0% {
+    background-color: #528009;
+    box-shadow: 0 0 0px #528009;
+  }
+  10% {
+    background-color: #a4e271;
+    box-shadow: 0 0 5px #a4e271;
+  }
+  20% {
+    background-color: #528009;
+    box-shadow: 0 0 0px #528009;
+  }
+  30% {
+    background-color: #a4e271;
+    box-shadow: 0 0 5px #a4e271;
+  }
+  40%, 100% {
+    background-color: #528009;
+    box-shadow: 0 0 0px #528009;
+  }
+}
+
+@keyframes encender-apagar {
+  0% {
+    opacity: 1;
+  }
+  40%, 100% {
+    opacity: 0.5;
   }
 }
 

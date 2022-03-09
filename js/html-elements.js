@@ -232,6 +232,19 @@ export class Pulsador extends ElementoHTML {
 		this.ajustarTiempo();
 	}
 
+	reproducirAnimacion(animacion) {
+
+		this.elemento.classList.remove("apagado");
+		Pulsador.ejecutar_animacion(this, animacion, true);
+		this.apagado = false;
+	}
+
+	stopReproducirAnimacion(animacion) {
+		this.elemento.classList.add("apagado");
+		Pulsador.ejecutar_animacion(this, animacion, false);
+		this.apagado = true;
+	}
+
 	tocar() {
 		this.duracion_de_la_animacion = this.duracionDefault;
 		this.iluminar();

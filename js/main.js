@@ -12,6 +12,11 @@ const btn_aceptar = new HTML_Elements.BotonIcono("btn_aceptar");
 
 const menuCargando = new HTML_Elements.Div("menuCargando", false); 
 const menuSeleccion = new HTML_Elements.Div("menuSeleccion", false);
+const menuJuegoClasico = new HTML_Elements.Div("menuJuegoClasico", false);
+const menuSuccess = new HTML_Elements.Div("menuSuccess", false);
+const menuDerrota = new HTML_Elements.Div("menuDerrota", false);
+
+const numSecuenciaPantalla = new HTML_Elements.Div("numSecuenciaPantalla", false);
 
 const menuSeleccionSeleccionado = new HTML_Elements.Div("menuSeleccionSeleccionado", false);
 
@@ -29,7 +34,7 @@ pulsadores.push(pulsador_green);
 pulsadores.push(pulsador_red);
 
 const actualizarMostrarSecuencia = function(string) {
-	//panel.escribir(string);
+	numSecuenciaPantalla.escribir(secuencia.length);
 }
 
 const tocarPulsador = async function (pulsador) {
@@ -92,15 +97,28 @@ const pulsar = async function(pulsador, indice) {
 			habilitarPulsadores();
 		else
 		{
-			// Algo...
+			estado_de_juego = "success";
+			cambiar_pantalla();
+
+			encenderPulsadoresCorrecto(true);	
 			await Clases.Reloj.esperar(2000);
+			encenderPulsadoresCorrecto(false);
+
 			ajustarTiempoPulsadores();
-			secuenciaPulsada = []
+			secuenciaPulsada = [];
+
+			estado_de_juego = "clasico";
+			cambiar_pantalla();
+
+			await Clases.Reloj.esperar(1500);
+
 			jugar();
 		}
 	else
 	{
-		//algo...
+		estado_de_juego = "derrota";
+		cambiar_pantalla();
+		encenderPulsadoresDerrota(true);
 	}
 }
 
@@ -155,6 +173,30 @@ const encenderPulsadores = async function() {
 	return true;
 }
 
+const encenderPulsadoresDerrota = async function(encender) {
+	
+	for (var i = 0; i < pulsadores.length; i++) {
+		if (encender)
+			pulsadores[i].reproducirAnimacion("animacion-derrota");
+		else
+			pulsadores[i].stopReproducirAnimacion("animacion-derrota");
+	}
+
+	return true;
+}
+
+const encenderPulsadoresCorrecto = async function(encender) {
+	
+	for (var i = 0; i < pulsadores.length; i++) {
+		if (encender)
+			pulsadores[i].reproducirAnimacion("animacion-correcto");
+		else
+			pulsadores[i].stopReproducirAnimacion("animacion-correcto");
+	}
+
+	return true;
+}
+
 const inicializarElementos = function() {
 
 	pulsador_orange.asignarEvent("click", () => { pulsar(pulsador_orange, 0) });
@@ -181,10 +223,9 @@ const inicializarElementos = function() {
 }
 
 const comprobarSecuencia = function() {
-	for (var i = 0; i < secuenciaPulsada.length; i++) {
+	for (var i = 0; i < secuenciaPulsada.length; i++)
 		if (secuencia[i] !== secuenciaPulsada[i])
-			throw new Error("Fin del juego!!!");
-	}
+			return false;
 
 	return true;
 }
@@ -214,12 +255,24 @@ const cambiar_pantalla = function() {
 
 	menuCargando.ocultar();
 	menuSeleccion.ocultar();
+	menuJuegoClasico.ocultar();
+	menuSuccess.ocultar();
+	menuDerrota.ocultar();
 
 	if (estado_de_juego === "cargando")
 		menuCargando.mostrar();
 
 	if (estado_de_juego === "menuSeleccion")
 		menuSeleccion.mostrar();
+
+	if (estado_de_juego === "clasico")
+		menuJuegoClasico.mostrar();
+
+	if (estado_de_juego === "success")
+		menuSuccess.mostrar();
+
+	if(estado_de_juego === "derrota")
+		menuDerrota.mostrar();
 }
 
 const switch_apagado = function() {
@@ -283,7 +336,9 @@ const jugar = async function() {
 
 inicializarElementos();
 
-//jugar();
+estado_de_juego = "clasico";
+cambiar_pantalla();
 
-estado_de_juego = "cargando";
-ajustarse_al_estado();
+jugar();
+
+//ajustarse_al_estado();

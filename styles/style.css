@@ -227,3 +227,23 @@ body {
 	flex-direction: column;
 	justify-content: space-evenly;
 }
+
+#menuJuegoClasico {
+	height: 100%;
+	flex-direction: column;
+	justify-content: space-evenly;
+}
+
+#menuSuccess {
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	color: lightgreen;
+}
+
+#menuDerrota {
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	color: lightgreen;
+}
