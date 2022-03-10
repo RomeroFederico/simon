@@ -180,3 +180,15 @@
     height: 0;
   }
 }
+
+.animacion-progreso {
+  animation: progreso 1.5s ease-in;
+  animation-delay: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes progreso {
+  to {
+    border-left-width: 92px;
+  }
+}
