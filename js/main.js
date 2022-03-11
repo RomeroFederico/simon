@@ -456,6 +456,22 @@ function convertirSecuencia() {
 	});
 }
 
+// async function prueba() {
+// 	await Clases.Reloj.esperar(500);
+// 	nueva_animacion.agregarAnimacion(barraExperienciaSUCCESS, "animacion-progreso");
+
+// 	await Clases.Reloj.esperar(2500);
+
+// 	barraExperienciaSUCCESS.style.borderLeftWidth = "50px";
+
+// 	nueva_animacion.borrarAnimacion("animacion-progreso");
+
+// 	nueva_animacion.crearAnimacionDinamica("animacion-progreso2", "border-left-width: 30px;");
+// 	nueva_animacion.agregarAnimacion(barraExperienciaSUCCESS, "animacion-progreso2");
+
+// 	console.log(nueva_animacion);
+// }
+
 inicializarElementos();
 
 estado_de_juego = "cargando";
@@ -464,3 +480,12 @@ estado_de_juego = "cargando";
 //jugar();
 
 //ajustarse_al_estado();
+
+// const barraExperienciaSUCCESS = new HTML_Elements.Div("barraExperienciaSUCCESS", true);
+// const nueva_animacion = new Clases.Animacion();
+
+// nueva_animacion.crearAnimacionDinamica("animacion-progreso", "border-left-width: 50px;");
+
+// prueba();
+
+//nueva_animacion.agregarAnimacion(barraExperienciaSUCCESS);

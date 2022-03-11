@@ -501,7 +501,7 @@ body {
 	border: solid 1px lightgreen;
 	opacity: 0.5;
 	border-radius: 5px;
-	border-left-width: 1spx;
+	border-left-width: 1px;
 }
 
 #lblInfoActExp {
@@ -544,4 +544,18 @@ body {
 
 #lblInfoNivelActual {
 	letter-spacing: 1px;
+}
+
+.menuLevelSPLASH {
+	flex-direction: column;
+}
+
+.menuLevelSPLASH .fa-2xl {
+	line-height: 1;
+}
+
+.menuLevelSPLASH div {
+	font-size: 9px;
+	font-weight: 600;
+	margin-top: 5px;
 }
