@@ -16,13 +16,30 @@ const menuJuegoClasico = new HTML_Elements.Div("menuJuegoClasico", false);
 const menuJuegoClasicoSPLASH = new HTML_Elements.Div("menuJuegoClasicoSPLASH", false);
 const menuSuccess = new HTML_Elements.Div("menuSuccess", false);
 const menuDerrota = new HTML_Elements.Div("menuDerrota", false);
+const menuJuegoModernoSPLASH = new HTML_Elements.Div("menuJuegoModernoSPLASH", false);
+const menuJuegoModerno = new HTML_Elements.Div("menuJuegoModerno", false);
+const menuSuccessModerno = new HTML_Elements.Div("menuSuccessSCORE", false);
+const menuPerderVida = new HTML_Elements.Div("menuPerderVida", false);
+const menuDerrotaM = new HTML_Elements.Div("menuDerrotaM", false);
+const menuLevelUP = new HTML_Elements.Div("menuLevelUP", false);
+const menuLevelDOWN = new HTML_Elements.Div("menuLevelDOWN", false);
 
 const numSecuenciaPantalla = new HTML_Elements.Div("numSecuenciaPantalla", false);
 const numRecord = new HTML_Elements.Div("numRecord", false);
 const banPulsar = new HTML_Elements.Div("banPulsar", false);
 
+const numScore = new HTML_Elements.Div("numScore", false);
+const numScoreRecord = new HTML_Elements.Div("numScoreRecord", false);
+const banPulsarM = new HTML_Elements.Div("banPulsarM", false);
+const infoLives = new HTML_Elements.Div("infoLives", false);
+const infoNivel = new HTML_Elements.Div("infoNivel", false);
+const barraExperiencia = new HTML_Elements.BarraProgreso("barraExperiencia", 33);
+
 const numSecuenciaFin = new HTML_Elements.Div("numSecuenciaFin", false);
 const newRecord = new HTML_Elements.Div("newRecord", false);
+
+const numScoreFin = new HTML_Elements.Div("numScoreFin", false);
+const newRecordM = new HTML_Elements.Div("newRecordM", false);
 
 const menuSeleccionSeleccionado = new HTML_Elements.Div("menuSeleccionSeleccionado", false);
 
@@ -36,6 +53,14 @@ var tiempo = 700;
 var estado_de_juego = "apagado";
 var record = 5; // PROVISORIO
 
+var scoreActual = 0;
+var scoreRecord = 1000; // PROVISORIO
+var nivel = 2;
+var experiencia = 2;
+var experienciaLevelUP = [2, 3, 6];
+var vidas = 3;
+var bajoNivel = false;
+
 pulsadores.push(pulsador_orange);
 pulsadores.push(pulsador_blue);
 pulsadores.push(pulsador_green);
@@ -48,6 +73,13 @@ const actualizarMostrarSecuencia = function(string) {
 		numSecuenciaPantalla.escribir(string);
 }
 
+const actualizarScore = function(string) {
+	if (string === undefined)
+			numScore.escribir(scoreActual);
+		else
+			numScore.escribir(0);
+}
+
 const actualizarRecord = function() {
 	if (secuencia.length >= record)
 		numRecord.escribir(secuencia.length);
@@ -55,10 +87,49 @@ const actualizarRecord = function() {
 		numRecord.escribir(record);
 }
 
+const actualizarScoreRecord = function() {
+	if (scoreActual >= scoreRecord)
+		numScoreRecord.escribir(scoreActual);
+	else
+		numScoreRecord.escribir(scoreRecord);
+}
+
+const actualizarBarraExperiencia = function(barra) {
+	barra.actualizar(experiencia, experienciaLevelUP[nivel - 1]);
+}
+
+const actualizarLives = function(barra) {
+	infoLives.escribir("x" + vidas);
+}
+
+const actualizarNivel = function(barra) {
+	infoNivel.escribir("LVL " + nivel);
+}
+
+const reducirNivel = function() {
+	if (nivel !== 1)
+	{
+		nivel--;
+		bajoNivel = true;
+	}
+
+	experiencia = 0;
+}
+
 const escribirMensajeGameOver = function() {
-	numSecuenciaFin.escribir("max secuencia: " + secuencia.length);
-	if (secuencia.length >= record)
-		newRecord.mostrar();
+
+	if (modoDeJuegoSeleccionado === 0) {
+
+		numSecuenciaFin.escribir("max secuencia: " + secuencia.length);
+		if (secuencia.length >= record)
+			newRecord.mostrar();
+	}
+	else {
+
+		numScoreFin.escribir("score: " + scoreActual);
+		if (scoreActual >= scoreRecord)
+			newRecordM.mostrar();
+	}
 }
 
 const tocarPulsador = async function (pulsador) {
@@ -130,13 +201,21 @@ const pulsar = async function(pulsador, indice) {
 	if (comprobarSecuencia())
 		if (secuencia.length > secuenciaPulsada.length)
 			habilitarPulsadores();
-		else
+		else if (modoDeJuegoSeleccionado === 0)
 			continuarPartida();
-	else
+		else
+			continuarPartidaModerno();
+	else if (modoDeJuegoSeleccionado === 0)
 		finDeLaPartida();
+	else
+		if (vidas === 1)
+			finDeLaPartidaModerno();
+		else
+			perderUnaVida();
 }
 
 const continuarPartida = async function() {
+
 	estado_de_juego = "success";
 	cambiar_pantalla();
 
@@ -154,6 +233,7 @@ const continuarPartida = async function() {
 }
 
 const finDeLaPartida = async function() {
+
 	estado_de_juego = "derrota";
 	cambiar_pantalla();
 
@@ -177,13 +257,95 @@ const finDeLaPartida = async function() {
 	ajustarse_al_estado();
 }
 
+const continuarPartidaModerno = async function() {
+
+	estado_de_juego = "successModerno";
+	cambiar_pantalla();
+
+	encenderPulsadoresCorrecto(true);	
+	await Clases.Reloj.esperar(1000);
+	encenderPulsadoresCorrecto(false);
+
+	ajustarTiempoPulsadores();
+	secuenciaPulsada = [];
+
+	estado_de_juego = "clasico";
+	cambiar_pantalla();
+
+	jugar();
+}
+
+const perderUnaVida = async function() {
+
+	estado_de_juego = "perderUnaVida";
+	cambiar_pantalla();
+
+	encenderPulsadoresDerrota(true);
+	await Clases.Reloj.esperar(1500);
+
+	reducirNivel();
+
+	if (bajoNivel)
+	{
+		estado_de_juego = "levelDOWN";
+		cambiar_pantalla();
+		bajoNivel = false;
+	}
+
+	await Clases.Reloj.esperar(1500);
+	encenderPulsadoresDerrota(false);
+
+	ajustarTiempoPulsadores();
+	secuenciaPulsada = [];
+	secuencia.pop();
+	vidas--;
+
+	estado_de_juego = "moderno";
+	cambiar_pantalla();
+
+	jugarModerno();
+}
+
+const finDeLaPartidaModerno = async function() {
+
+	estado_de_juego = "derrotaModerno";
+	cambiar_pantalla();
+
+	escribirMensajeGameOver();
+
+	encenderPulsadoresDerrota(true);
+	await Clases.Reloj.esperar(3000);
+	encenderPulsadoresDerrota(false);
+
+	ajustarTiempoPulsadoresDefault();
+	tiempo = tiempoDefault;
+
+	secuencia = [];
+	secuenciaPulsada = [];
+
+	newRecordM.ocultar();
+
+	actualizarScore(1);
+
+	scoreActual = 0;
+	nivel = 1;
+	experiencia = 0;
+	vidas = 3;
+
+	estado_de_juego = "menuSeleccion";
+	ajustarse_al_estado();
+}
+
 const habilitarPulsadores = function() {
 
 	pulsadores.forEach((pulsador) => {
 		pulsador.activar();
 	})
 
-	banPulsar.ocultar();
+	if (modoDeJuegoSeleccionado === 0)
+		banPulsar.ocultar();
+	else
+		banPulsarM.ocultar();
 }
 
 const deshabilitarPulsadores = function() {
@@ -191,7 +353,10 @@ const deshabilitarPulsadores = function() {
 		pulsador.desactivar();
 	})
 
-	banPulsar.mostrar();
+	if (modoDeJuegoSeleccionado === 0)
+		banPulsar.mostrar();
+	else
+		banPulsarM.mostrar();
 }
 
 const mover = function(direccion) {
@@ -205,7 +370,30 @@ const mover = function(direccion) {
 }
 
 const aceptar = function() {
-	estado_de_juego = "SPLASHclasico";
+
+	if (estado_de_juego = "menuSeleccion")
+		seleccionar_del_menu();
+}
+
+const seleccionar_del_menu = function() {
+
+	switch (modoDeJuegoSeleccionado)
+	{
+		case 0:
+			estado_de_juego = "SPLASHclasico";
+			break;
+		case 1:
+			estado_de_juego = "SPLASHmoderno";
+			break;
+		case 2:
+
+			break;
+		case 3:
+
+			break;
+		default:
+	}
+
 	ajustarse_al_estado();
 }
 
@@ -282,6 +470,12 @@ const inicializarElementos = function() {
 
 	actualizarMostrarSecuencia(1);
 	actualizarRecord();
+	actualizarScore(1);
+	actualizarScoreRecord();
+
+	actualizarBarraExperiencia(barraExperiencia);
+	actualizarLives();
+	actualizarNivel();
 }
 
 const comprobarSecuencia = function() {
@@ -316,6 +510,14 @@ const ajustarse_al_estado = function() {
 			// HABILITAR PANTALLA MODO CLASICO, DESACTIVO TODOS LOS BOTONES.
 			switch_modo_clasico();
 			break;
+		case ("SPLASHmoderno"):
+			// HABILITAR PANTALLA MODO MODERNO. DESACTIVO TODOS LOS BOTONES.
+			switch_modo_moderno_SPLASH();
+			break;
+		case ("moderno"):
+			// HABILITAR PANTALLA MODO CLASICO, DESACTIVO TODOS LOS BOTONES.
+			switch_modo_moderno();
+			break;
 		default:
 
 	}
@@ -326,9 +528,16 @@ const cambiar_pantalla = function() {
 	menuCargando.ocultar();
 	menuSeleccion.ocultar();
 	menuJuegoClasicoSPLASH.ocultar();
+	menuJuegoModernoSPLASH.ocultar();
 	menuJuegoClasico.ocultar();
 	menuSuccess.ocultar();
 	menuDerrota.ocultar();
+	menuJuegoModerno.ocultar();
+	menuSuccessModerno.ocultar();
+	menuPerderVida.ocultar();
+	menuDerrotaM.ocultar();
+	menuLevelUP.ocultar();
+	menuLevelDOWN.ocultar();
 
 	if (estado_de_juego === "cargando")
 		menuCargando.mostrar();
@@ -339,6 +548,9 @@ const cambiar_pantalla = function() {
 	if (estado_de_juego === "SPLASHclasico")
 		menuJuegoClasicoSPLASH.mostrar();
 
+	if (estado_de_juego === "SPLASHmoderno")
+		menuJuegoModernoSPLASH.mostrar();
+
 	if (estado_de_juego === "clasico")
 		menuJuegoClasico.mostrar();
 
@@ -347,6 +559,24 @@ const cambiar_pantalla = function() {
 
 	if(estado_de_juego === "derrota")
 		menuDerrota.mostrar();
+
+	if (estado_de_juego === "moderno")
+		menuJuegoModerno.mostrar();
+
+	if (estado_de_juego === "successModerno")
+		menuSuccessModerno.mostrar();
+
+	if (estado_de_juego === "perderUnaVida")
+		menuPerderVida.mostrar();
+
+	if (estado_de_juego === "derrotaModerno")
+		menuDerrotaM.mostrar();
+
+	if (estado_de_juego === "levelUP")
+		menuLevelUP.mostrar();
+
+	if (estado_de_juego === "levelDOWN")
+		menuLevelDOWN.mostrar();
 }
 
 const switch_apagado = function() {
@@ -429,6 +659,38 @@ const switch_modo_clasico = async function() {
 	jugar();
 }
 
+const switch_modo_moderno_SPLASH = async function() {
+	console.log("mostrando: juego moderno SPLASH");
+
+	apagarPulsadores();
+	deshabilitarPulsadores();
+
+	flecha_der.desactivar();
+	flecha_izq.desactivar();
+	btn_aceptar.desactivar();
+
+	await Clases.Reloj.esperar(1500);
+
+	estado_de_juego = "moderno";
+
+	ajustarse_al_estado();
+}
+
+const switch_modo_moderno = async function() {
+	console.log("mostrando: juego moderno");
+
+	apagarPulsadores();
+	deshabilitarPulsadores();
+
+	flecha_der.desactivar();
+	flecha_izq.desactivar();
+	btn_aceptar.desactivar();
+
+	await Clases.Reloj.esperar(250);
+
+	jugarModerno();
+}
+
 const jugar = async function() {
 
 	banPulsar.mostrar();
@@ -437,6 +699,31 @@ const jugar = async function() {
 
 	actualizarMostrarSecuencia();
 	actualizarRecord();
+
+	await Clases.Reloj.esperar(750);
+
+	await iluminarSecuencia();
+
+	console.log(convertirSecuencia());
+
+	reducirTiempoPulsadores();
+	reducirTemporizador();
+
+	habilitarPulsadores();
+}
+
+const jugarModerno = async function() {
+
+	banPulsarM.mostrar();
+
+	actualizarBarraExperiencia(barraExperiencia);
+	actualizarLives();
+	actualizarNivel();
+
+	obtenerSiguienteSecuencia();
+
+	actualizarScore();
+	actualizarScoreRecord();
 
 	await Clases.Reloj.esperar(750);
 
@@ -479,7 +766,7 @@ estado_de_juego = "cargando";
 
 //jugar();
 
-//ajustarse_al_estado();
+ajustarse_al_estado();
 
 // const barraExperienciaSUCCESS = new HTML_Elements.Div("barraExperienciaSUCCESS", true);
 // const nueva_animacion = new Clases.Animacion();

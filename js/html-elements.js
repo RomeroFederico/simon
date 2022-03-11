@@ -106,6 +106,28 @@ export class ElementoHTML {
 	}
 }
 
+export class BarraProgreso extends ElementoHTML {
+	constructor(id, max_width) {
+		super(id);
+		this.largoInicial = 1;
+		this.largoActual = 1;
+		this.largoMaximo = max_width;
+	}
+
+	set largo(valor) {
+		this.largoActual = valor;
+	}
+
+	get largo() {
+		return this.largoActual;
+	}
+
+	actualizar(valor, max) {
+		this.largo = Math.round(valor * this.largoMaximo / max) + 1;
+		this.style['borderLeftWidth'] = this.largo + 'px';
+	}
+}
+
 export class Div extends ElementoHTML {
 
 	constructor(id, visible) {
