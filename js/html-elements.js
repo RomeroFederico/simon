@@ -123,8 +123,13 @@ export class BarraProgreso extends ElementoHTML {
 	}
 
 	actualizar(valor, max) {
-		this.largo = Math.round(valor * this.largoMaximo / max) + 1;
-		this.style['borderLeftWidth'] = this.largo + 'px';
+
+		if (max === false)
+			this.style['borderLeftWidth'] = '1px';
+		else {
+			this.largo = Math.round(valor * this.largoMaximo / max) + 1;
+			this.style['borderLeftWidth'] = this.largo + 'px';
+		}
 	}
 }
 
@@ -250,6 +255,11 @@ export class Pulsador extends ElementoHTML {
 
 	ajustarTiempo() {
 		this.duracion_de_la_animacion = this.duracion;
+	}
+
+	ajustarTiempoModerno(valor) {
+		this.duracion = valor;
+		this.duracion_de_la_animacion = valor;
 	}
 
 	reducirTiempo() {

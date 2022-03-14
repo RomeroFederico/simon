@@ -36,7 +36,8 @@ export class CreadorAnimaciones {
 			return animacion.nombre === nombre_animacion;
 		});
 
-		this.styleSheet.sheet.deleteRule(indice);
+		if (indice !== -1)
+			this.styleSheet.sheet.deleteRule(indice);
 	}
 
 	agregarAnimacion(elemento, nombre_animacion) {
@@ -47,15 +48,15 @@ export class CreadorAnimaciones {
 
 		var cadena = animacion.nombre;
 		cadena += ' ' + animacion.duracion;
-		cadena += animacion.infinita;
+		cadena += animacion.infinita? 'infinite' : '';
 
 		elemento.style.animation = cadena;
 
 		if (animacion.delay !== 0)
 			elemento.style.animationDelay = animacion.delay;
 
-		if (animacion.fill_mode !== "none")
-			elemento.style.animationFillMode = animacion.fill_mode;
+		if (animacion.fillModeAnimacion !== "none")
+			elemento.style.animationFillMode = animacion.fillModeAnimacion;
 	}
 
 	crearAnimacionDinamica(nombre, estilos) {
@@ -78,9 +79,9 @@ export class Animacion {
 
 	constructor(nombre) {
 		this.nombreAnimacion = nombre;
-		this.duracionAnimacion = 1500;
+		this.duracionAnimacion = '750ms';
 		this.infinitaAnimacion = false;
-		this.delayAnimacion = 500;
+		this.delayAnimacion = '250ms';
 		this.fill_modeAnimacion = "forwards";
 	}
 
@@ -116,11 +117,11 @@ export class Animacion {
 		this.delayAnimacion = valor + "ms";
 	}
 
-	get fill_mode() {
+	get fillModeAnimacion() {
 		return this.fill_modeAnimacion
 	}
 
-	set fill_modeAnimacion(valor) {
+	set fillModeAnimacion(valor) {
 		this.fill_modeAnimacion = valor;
 	}
 }

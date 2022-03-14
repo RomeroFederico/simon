@@ -18,11 +18,11 @@ const menuSuccess = new HTML_Elements.Div("menuSuccess", false);
 const menuDerrota = new HTML_Elements.Div("menuDerrota", false);
 const menuJuegoModernoSPLASH = new HTML_Elements.Div("menuJuegoModernoSPLASH", false);
 const menuJuegoModerno = new HTML_Elements.Div("menuJuegoModerno", false);
-const menuSuccessModerno = new HTML_Elements.Div("menuSuccessSCORE", false);
 const menuPerderVida = new HTML_Elements.Div("menuPerderVida", false);
 const menuDerrotaM = new HTML_Elements.Div("menuDerrotaM", false);
 const menuLevelUP = new HTML_Elements.Div("menuLevelUP", false);
 const menuLevelDOWN = new HTML_Elements.Div("menuLevelDOWN", false);
+const menuSuccessSCORE = new HTML_Elements.Div("menuSuccessSCORE", false);
 
 const numSecuenciaPantalla = new HTML_Elements.Div("numSecuenciaPantalla", false);
 const numRecord = new HTML_Elements.Div("numRecord", false);
@@ -34,6 +34,18 @@ const banPulsarM = new HTML_Elements.Div("banPulsarM", false);
 const infoLives = new HTML_Elements.Div("infoLives", false);
 const infoNivel = new HTML_Elements.Div("infoNivel", false);
 const barraExperiencia = new HTML_Elements.BarraProgreso("barraExperiencia", 33);
+
+const infoSuccessSCORE = new HTML_Elements.Div("infoSuccessSCORE", false);
+const lbldataSCORE = new HTML_Elements.Div("lbldataSCORE", false);
+const lbldataRONDA = new HTML_Elements.Div("lbldataRONDA", false);
+const lbldataBONUS = new HTML_Elements.Div("lbldataBONUS", false);
+const lbldataTOTAL = new HTML_Elements.Div("lbldataTOTAL", false);
+
+const infoSuccessEXPERIENCIA = new HTML_Elements.Div("infoSuccessEXPERIENCIA", false);
+const barraExperienciaSUCCESS = new HTML_Elements.BarraProgreso("barraExperienciaSUCCESS", 91);
+const lblInfoNivelActual = new HTML_Elements.Div("lblInfoNivelActual", false);
+const lblDataActExp = new HTML_Elements.Div("lblDataActExp", false);
+const lblDataSigExp = new HTML_Elements.Div("lblDataSigExp", false);
 
 const numSecuenciaFin = new HTML_Elements.Div("numSecuenciaFin", false);
 const newRecord = new HTML_Elements.Div("newRecord", false);
@@ -55,16 +67,111 @@ var record = 5; // PROVISORIO
 
 var scoreActual = 0;
 var scoreRecord = 1000; // PROVISORIO
-var nivel = 2;
-var experiencia = 2;
-var experienciaLevelUP = [2, 3, 6];
+var nivel = 3;
+var experiencia = 5;
+var experienciaLevelUP = [2, 3, 6, false];
 var vidas = 3;
 var bajoNivel = false;
+var nuevoLargo = 0;
+
+var mostrarScore = {
+	scoreActual : 0,
+	ronda : 0,
+	scoreBonus : 0,
+	scoreTotal : 0
+}
+
+var mostrarExp = {
+	expActual : 0,
+	expFaltante : 0,
+	extTtotal : 0,
+	subidaNivel : false
+}
+
+const nueva_animacion = new Clases.CreadorAnimaciones();
 
 pulsadores.push(pulsador_orange);
 pulsadores.push(pulsador_blue);
 pulsadores.push(pulsador_green);
 pulsadores.push(pulsador_red);
+
+const calcularPuntaje = function() {
+	mostrarScore.scoreActual = scoreActual;
+	mostrarScore.ronda = secuencia.length;
+	mostrarScore.bonus = nivel;
+	mostrarScore.scoreBonus = mostrarScore.ronda * mostrarScore.bonus;
+	mostrarScore.scoreTotal = mostrarScore.scoreBonus + mostrarScore.scoreActual;
+
+	scoreActual = mostrarScore.scoreTotal;
+}
+
+const mostrarPuntaje = function() {
+	lbldataSCORE.escribir(mostrarScore.scoreActual);
+	lbldataRONDA.escribir(mostrarScore.ronda);
+	lbldataBONUS.escribir("x" + mostrarScore.bonus);
+	lbldataTOTAL.escribir(mostrarScore.scoreTotal);
+
+	infoSuccessSCORE.mostrar();
+}
+
+const ocultarPuntaje = function() {
+	infoSuccessSCORE.ocultar();
+}
+
+const calcularExperiencia = function() {
+
+	mostrarExp.subidaNivel = false;
+
+	if (nivel === 4)
+	{
+		experiencia = 0;
+		mostrarExp.expActual = experiencia;
+		mostrarExp.expFaltante = '---';
+		mostrarExp.expTotal = 0;
+	}
+	else
+	{
+		mostrarExp.expActual = experiencia;
+		experiencia++;
+		mostrarExp.expFaltante = experienciaLevelUP[nivel - 1] - experiencia;
+		if (mostrarExp.expFaltante === 0)
+		{
+			mostrarExp.expTotal = 0;
+			mostrarExp.expFaltante = 0;
+			nivel++;
+			experiencia = 0;
+			mostrarExp.subidaNivel = true;
+		}
+		else
+			mostrarExp.expTotal = experiencia;
+	}
+}
+
+const mostrarExperiencia = function() {
+	lblInfoNivelActual.escribir("LVL" + nivel);
+	lblDataActExp.escribir(mostrarExp.expTotal);
+	lblDataSigExp.escribir(mostrarExp.expFaltante);
+
+	infoSuccessEXPERIENCIA.mostrar();
+}
+
+const animarBarraExp = function() {
+
+	if (nivel === 4 && mostrarExp.subidaNivel === false)
+	{
+		return;
+	}
+
+	if (mostrarExp.subidaNivel)
+		nuevoLargo = 0;
+	else 
+		nuevoLargo = Math.round(mostrarExp.expTotal * 91 / experienciaLevelUP[nivel - 1]);
+
+	nueva_animacion.borrarAnimacion("animacion-progreso");
+
+	nueva_animacion.crearAnimacionDinamica("animacion-progreso", "border-left-width: " + nuevoLargo + "px;");
+	nueva_animacion.agregarAnimacion(barraExperienciaSUCCESS, "animacion-progreso");
+}
 
 const actualizarMostrarSecuencia = function(string) {
 	if (string === undefined)
@@ -166,22 +273,55 @@ const obtenerSiguienteSecuencia = function() {
 	secuencia.push(Math.floor(Math.random() * 4));
 }
 
+const calcularTiempoAReducir = function() {
+
+	var valor = 0;
+
+	switch (nivel) { 
+		case 1:
+			valor = 700;
+			break;
+		case 2:
+			valor = 500;
+			break;
+		case 3:
+			valor = 300;
+			break;
+		case 4:
+			valor = 100;
+			break;
+		default:
+			valor = 0;
+	}
+
+	return valor;
+}
+
 const reducirTiempoPulsadores = function() {
-	pulsadores.forEach((pulsador) => {
-		pulsador.reducirTiempo();
-	})
+
+	if (modoDeJuegoSeleccionado === 0)
+		pulsadores.forEach((pulsador) => {
+			pulsador.reducirTiempo();
+		})
+	else if (modoDeJuegoSeleccionado === 1)
+		pulsadores.forEach((pulsador) => {
+			pulsador.ajustarTiempoModerno(calcularTiempoAReducir());
+		})
 }
 
 const reducirTemporizador = function() {
 	if (modoDeJuego[modoDeJuegoSeleccionado] === "CLASICO")
+	{
 		if (tiempo >= 300)
 		{
 			tiempo -= 25;
 			console.log("Tiempo reducido : " + tiempo);
 		}
+	}
 	else
-		if (tiempo >= 300)
-			tiempo -= 200;
+	{
+		tiempo = calcularTiempoAReducir();
+	}
 }
 
 const iluminarSecuencia = async function () {
@@ -259,20 +399,44 @@ const finDeLaPartida = async function() {
 
 const continuarPartidaModerno = async function() {
 
-	estado_de_juego = "successModerno";
+	estado_de_juego = "success";
 	cambiar_pantalla();
 
 	encenderPulsadoresCorrecto(true);	
 	await Clases.Reloj.esperar(1000);
+
+	estado_de_juego = "mostrarPuntajePartida";
+
+	calcularPuntaje();
+	mostrarPuntaje();
+	actualizarBarraExperiencia(barraExperienciaSUCCESS);
+
+	cambiar_pantalla();
+	
+	await Clases.Reloj.esperar(1000);
+	
+	ocultarPuntaje();
+
+	calcularExperiencia()
+	mostrarExperiencia();
+
+	animarBarraExp();
+
+	await Clases.Reloj.esperar(1000);
 	encenderPulsadoresCorrecto(false);
+
+	infoSuccessSCORE.ocultar();
+	infoSuccessEXPERIENCIA.ocultar();
+
+	barraExperienciaSUCCESS.actualizar(nuevoLargo, 91);
 
 	ajustarTiempoPulsadores();
 	secuenciaPulsada = [];
 
-	estado_de_juego = "clasico";
+	estado_de_juego = "moderno";
 	cambiar_pantalla();
 
-	jugar();
+	jugarModerno();
 }
 
 const perderUnaVida = async function() {
@@ -533,7 +697,7 @@ const cambiar_pantalla = function() {
 	menuSuccess.ocultar();
 	menuDerrota.ocultar();
 	menuJuegoModerno.ocultar();
-	menuSuccessModerno.ocultar();
+	menuSuccessSCORE.ocultar();
 	menuPerderVida.ocultar();
 	menuDerrotaM.ocultar();
 	menuLevelUP.ocultar();
@@ -563,8 +727,8 @@ const cambiar_pantalla = function() {
 	if (estado_de_juego === "moderno")
 		menuJuegoModerno.mostrar();
 
-	if (estado_de_juego === "successModerno")
-		menuSuccessModerno.mostrar();
+	if (estado_de_juego === "mostrarPuntajePartida")
+		menuSuccessSCORE.mostrar();
 
 	if (estado_de_juego === "perderUnaVida")
 		menuPerderVida.mostrar();
@@ -725,14 +889,14 @@ const jugarModerno = async function() {
 	actualizarScore();
 	actualizarScoreRecord();
 
+	reducirTiempoPulsadores();
+	reducirTemporizador();
+
 	await Clases.Reloj.esperar(750);
 
 	await iluminarSecuencia();
 
 	console.log(convertirSecuencia());
-
-	reducirTiempoPulsadores();
-	reducirTemporizador();
 
 	habilitarPulsadores();
 }
